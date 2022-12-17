@@ -135,13 +135,15 @@ public class Board {
         steps = previous.getSteps();
     }
 
-    public void solve(boolean statusReport, boolean showResult) {
-        // This part will keep repeating until the board is solved.
+    // boolean showSteps decides if every step will be described in the terminal or not.
+    // These two parameters should be false on larger boards due to delay caused.
+    public void solve(boolean showSteps, boolean showResult) {
+        // This part will keep repeating until the board is solved. Or no solution is found.
         if(!solved){
             ArrayList<int[]> leastPosMoves = leastPossibilitiesAfterMove();
             int moveAmount = leastPosMoves.size();
 
-            if(statusReport){
+            if(showSteps){
                 System.out.println("Possible move(s): "+moveAmount);
                 System.out.println();
             }
@@ -159,21 +161,21 @@ public class Board {
                 savedBoards.add(currentBoard);
 
                 branchesEncountered++;
-                if(statusReport){System.out.println("Total Branch: "+ savedBoards.size());}
+                if(showSteps){System.out.println("Total Branch: "+ savedBoards.size());}
 
                 for(int[] move : leastPosMoves){
                     if(!solved) {
-                        update(move, statusReport);
-                        solve(statusReport, showResult);
+                        update(move, showSteps);
+                        solve(showSteps, showResult);
                         if(!solved){
                             stepBack();
-                            if(statusReport){System.out.println("Stepped back to Branch:" + savedBoards.size());}
+                            if(showSteps){System.out.println("Stepped back to Branch:" + savedBoards.size());}
                         }
                     }
                 }
                 if(!solved) {
                     // Remove dead ends
-                    if(statusReport) {
+                    if(showSteps) {
                         System.out.println("Branch " + savedBoards.size() + " leads to dead end");
                         System.out.println("Branch "+ savedBoards.size()+" removed.");
                         System.out.println();
@@ -196,18 +198,18 @@ public class Board {
 
             }
             else if(moveAmount == 1){
-                update(leastPosMoves.get(0), statusReport);
-                solve(statusReport, showResult);
+                update(leastPosMoves.get(0), showSteps);
+                solve(showSteps, showResult);
             }
             else{
                 if(findCoveredArea() == squares){
                     if(steps == squares -1){
                         solved = true;
-                        solve(statusReport, showResult);
+                        solve(showSteps, showResult);
                     }
                 }
                 else{
-                    if(statusReport) {
+                    if(showSteps) {
                         System.out.println("Dead end");
                         System.out.println();
                     }
