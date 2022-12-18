@@ -18,6 +18,7 @@ public class Main {
 
         }
         Board game = new Board(sideLenght, startRow-1, startcolumn-1);
+        input.close();
         game.solve(false, true);
     }
 }
